@@ -1,14 +1,14 @@
 # config valid only for current version of Capistrano
 lock "3.8.2"
 
-set :application, "ec-trip"
-set :repo_url, "github:yamataka22/EC-TRIP.git"
+set :application, "virtuous-ec"
+set :repo_url, "github:virtuous-co-ltd/ec-service.git"
 
 # Default branch is :master
 ask :branch, "master"
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/var/www/ec-trip"
+set :deploy_to, "/var/www/virtuous-ec"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
