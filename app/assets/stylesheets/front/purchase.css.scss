@@ -1,0 +1,132 @@
+.purchase_wrap {
+  .purchase_flow {
+    margin-bottom: 40px;
+    .flow_line.step3 ul::before {
+      width: 40%;
+      left: 30%;
+      @media (max-width: 767px) {
+        width: 70%;
+        left: 15%;
+      }
+    }
+    .flow_line.step5 ul::before {
+      width: 80%;
+      left: 10%;
+    }
+    .flow_line ul::before {
+      content: "";
+      height: 4px;
+      background: #D3D3D3;
+      position: absolute;
+      top: 115px;
+      margin: 0;
+      border-radius: 2px;
+      z-index: 0;
+    }
+    .flow_line.step5 ul li {
+      width: 20%;
+    }
+    .flow_line.step3 ul li {
+      width: 20%;
+      @media (max-width: 767px) {
+        width: 33.3%;
+      }
+    }
+    .flow_line li {
+      float: left;
+      position: relative;
+      text-align: center;
+      white-space: nowrap;
+      z-index: 0;
+      font-size: 1.2rem;
+      color: #D3D3D3;
+      a {
+        color: #D3D3D3;
+      }
+      span {
+        font-size: 0.8rem;
+      }
+    }
+    .flow_line li .flow_number {
+      line-height: 40px;
+      width: 40px;
+      height: 40px;
+      margin-bottom: 5px;
+      margin-left: 8px;
+      background: #D3D3D3;
+      color: #fff;
+      top: 0;
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+      border-radius: 50%;
+    }
+    .flow_line li span{
+      color: #D3D3D3;
+    }
+    .flow_line li.active {
+      color: #4496EC;
+      span {color: #4496EC !important;}
+    }
+    .flow_line li.active .flow_number {
+      background: #4496EC;
+    }
+  }
+
+  .address_card, .card_list {
+    color: #3F4550;
+  }
+}
+
+.purchase_show {
+  width: 800px;
+  padding: 30px;
+
+  header {
+    margin-bottom: 40px;
+    .logo {
+      width: 400px;
+      img {
+        width: 180px;
+      }
+    }
+    .purchase_info {
+      width: 400px;
+      table {
+        margin-left: auto;
+        margin-right: 0
+      }
+    }
+  }
+  .title {
+    margin-bottom: 20px;
+  }
+  .main {
+    width: 400px;
+    margin: 0 auto;
+
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      tr {
+        border-bottom: 2px solid #000;
+        font-size: 1.5rem;
+        line-height: 3rem;
+        td {
+          padding-top: 20px;
+        }
+      }
+
+    }
+  }
+  .btn_print {
+    margin-top: 50px;
+  }
+  @media print {
+    size: A4;
+    .btn_print {
+      display: none;
+    }
+
+  }
+}
