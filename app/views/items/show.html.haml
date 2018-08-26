@@ -1,0 +1,100 @@
+- favorite = current_member&.favorites&.find{|favorite| favorite.item_id == @item.id}
+- content_for :stylesheet do
+  = stylesheet_link_tag 'front/item'
+  = stylesheet_link_tag 'magnific-popup/dist/magnific-popup'
+.item_show
+  .container
+    .row.justify-content-lg-center
+      .col-lg-11.col-xl-10
+        - if controller.controller_path == 'admin/items'
+          .alert.alert-primary これはプレビュー表示です。登録は完了していません。
+        - if @item.end_of_sell?
+          .alert.alert-danger この商品は販売を終了しています。
+        - elsif @item.stock_quantity == 0
+          .alert.alert-danger この商品は一時的に在庫切れとなっています。
+        - if flash[:error].present?
+          .alert.alert-danger= flash[:error]
+        - if Cart.search(current_member, session[:cart_session_id])&.find_by(item_id: @item.id).present?
+          .alert.alert-primary
+            .clearfix.pt-1
+              .float-left
+                %p.pt-1.mb-0= params[:cart_added] ? 'カートに追加しました' : 'この商品はカートに追加されています'
+              .float-right
+                = link_to 'カートを編集', carts_path, class: 'btn btn-info'
+                = link_to 'レジに進む', new_order_purchase_path, class: 'btn btn-warning btn-raised'
+        .row
+          .col-md-8
+            .card.item_about.mb-3
+              .card-header.text-center
+                %h1.h3= @item.name
+                %p.text-muted= @item.description
+              .card-body.item_cms
+                = @item.about.try(:html_safe)
+                %a.image-link{href: '#'}
+              .card-footer.text-center.pt-3
+                = link_to items_path, class: 'btn btn-outline-secondary mx-2' do
+                  %i.fa.fa-fw.fa-arrow-left
+                  一覧に戻る
+                - if @item.can_sell?
+                  = link_to carts_path(item_id: @item.id), method: :post, class: 'btn btn-outline-warning mx-2' do
+                    %i.fa.fa-fw.fa-cart-plus
+                    カートに追加する
+          .col-md-4
+            .sticky-top{style: 'z-index: 0'}
+              .card.hidden-md-down
+                .card-body
+                  .alert.alert-primary.text-center
+                    販売価格
+                    %span.ml-3= jpy(@item.price, suffix: true)
+                    %span.small (税抜)
+                  - if @item.remarks.present?
+                    %p.text-justify= @item.remarks
+                  .text-center.mt-3
+                    = render 'favorites/button', item: @item, favorite: favorite, btn_size: ''
+                    = render 'carts/button', item: @item, btn_size: ''
+  .operation_sp.view_sp
+    .fixed-bottom
+      .card
+        .card-body
+          .pull-left
+            .alert.alert-primary.mb-0.mt-2
+              %span.small 販売価格:
+              = jpy(@item.price, suffix: true)
+              %span.small (税抜)
+          .pull-right
+            = render 'favorites/button', item: @item, favorite: favorite, btn_size: ''
+            = render 'carts/button', item: @item, btn_size: ''
+- content_for :javascript do
+  = javascript_include_tag 'magnific-popup/dist/jquery.magnific-popup.min'
+  :javascript
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip({
+        delay: { "show": 200, "hide": 100 }
+      });
+
+      $(window).on("scroll", function() {
+        var scrollHeight = $(document).height();
+        var scrollPosition = $(window).height() + $(window).scrollTop();
+        if ((scrollHeight - scrollPosition) / scrollHeight === 0) {
+          $('.operation_sp').hide();
+        } else {
+          $('.operation_sp').show();
+        }
+      });
+    });
+
+    $(document).ready(function() {
+      $('.image-link').magnificPopup({
+        type:'image',
+        removalDelay: 300,
+        mainClass: 'mfp-fade',
+        gallery:{
+          enabled:true
+        }
+      });
+    });
+
+    $('.item_cms').find('img').click(function() {
+      $('.image-link').attr('href', $(this).attr('src'));
+      $('.image-link').click();
+    });

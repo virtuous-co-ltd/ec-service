@@ -1,0 +1,7 @@
+.container.text-center.mt-3
+  - if @title
+    %h3= @title
+    %p= simple_format(@message)
+  - else
+    %h4= simple_format(@message)
+  = link_to 'トップページへ', root_path, class: 'btn btn-info mt-3'

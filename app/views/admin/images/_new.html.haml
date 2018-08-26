@@ -1,0 +1,16 @@
+.modal.fade#image_select_dialog
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %h5.modal-title ファイル選択
+        %button.close{'aria-label' => 'Close', 'data-dismiss' => 'modal', :type => 'button'}
+          %span{'aria-hidden' => 'true'} &times;
+      .modal-body
+        %input.image_file{type: 'file'}
+        %input.target_class{type: 'hidden'}
+      .modal-footer
+        %button.btn.btn-primary.btn_select{onclick: 'image_select.upload();'} 選択
+        %button.btn.btn-light{'data-dismiss' => 'modal'} キャンセル
+- content_for :javascript do
+  = javascript_include_tag 'image_upload.js'
+

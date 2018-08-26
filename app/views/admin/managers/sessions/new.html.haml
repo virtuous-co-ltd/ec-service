@@ -1,0 +1,26 @@
+.container.mt-5
+  .row.justify-content-center
+    .col-xl-4.col-lg-5.col-md-6
+      .card
+        .card-body
+          %h4.text-center.pt-4
+            = image_tag 'logo.png', width: '80%'
+            .text-muted.pt-3 ADMIN LOGIN
+        .card-block
+          - if notice
+            .alert.alert-info
+              = notice
+          - if alert
+            .alert.alert-danger
+              = alert
+          = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+            .form-group
+              = f.label :email
+              = f.email_field :email, autofocus: true, class: 'form-control'
+            .form-group
+              = f.label :password
+              = f.password_field :password, autocomplete: 'off', class: 'form-control'
+            .pt-4
+              = f.submit 'ログイン', class: 'btn btn-primary btn-block'
+
+

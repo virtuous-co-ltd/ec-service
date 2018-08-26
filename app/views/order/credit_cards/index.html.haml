@@ -1,0 +1,27 @@
+- content_for :stylesheet do
+  = stylesheet_link_tag 'front/credit_card'
+.text-center
+  %h4.mb-2
+    お支払い方法
+  %p.text-muted.mb-5 クレジットカードを選択してください
+.row.justify-content-lg-center
+  .col-lg-10.col-xl-8
+    - @credit_cards.each do |card|
+      = link_to new_order_purchase_path(credit_card_id: card.id) do
+        .card.mb-3.card_list
+          .card-body
+            %span.fa.fa-fw.fa-lg{class: fa_card(card.brand)}
+            %span.ml-2= card.brand
+            %span.ml-2= card.last4
+            %span.ml-2= "#{card.exp_month}/#{card.exp_year}"
+            %span.ml-2= card.name
+    %div
+      = link_to '他のカードを利用する', new_order_credit_card_path, class: 'btn btn-info btn-raised', remote: true
+.modal.fade.card_form_dialog
+  .modal-dialog
+    .modal-content
+- content_for :javascript do
+  %script{:src => 'https://js.stripe.com/v2/', :type => 'text/javascript'}
+  :javascript
+    Stripe.setPublishableKey('#{ENV['STRIPE_PUBLISHABLE_KEY']}');
+  = javascript_include_tag 'stripe_operate'

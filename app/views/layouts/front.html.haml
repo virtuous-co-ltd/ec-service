@@ -1,0 +1,80 @@
+!!!
+%html
+  %head
+    %meta{:content => 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type'}/
+    %meta{:content => 'width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0', :name => 'viewport'}/
+    %meta{:content => 'IE=edge', 'http-equiv' => 'X-UA-Compatible'}/
+    - if ENV['DEMO'].present?
+      %meta{:content => 'noindex', name: 'robots'}
+    %title
+      = "#{@crumbs.last[:title]} | " if @crumbs.present?
+      EC-TRIP
+    = csrf_meta_tags
+    %link{:href => '//fonts.googleapis.com/css?family=Roboto:300,400,500,700', :rel => 'stylesheet', :type => 'text/css'}/
+    %link{:href => '//fonts.googleapis.com/icon?family=Material+Icons', :rel => 'stylesheet', :type => 'text/css'}/
+    %link{:crossorigin => "anonymous", :href => "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", :integrity => "sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN", :rel => "stylesheet"}/
+    = stylesheet_link_tag    'front', media: 'all'
+    = yield :stylesheet
+  %body
+    %header
+      %nav.navbar.navbar-expand-lg.navbar-light.bg-light
+        = link_to root_path, class: 'navbar-brand mr-4' do
+          = image_tag 'logo.png', height: '18px'
+        %button.navbar-toggler{'aria-controls' => 'navbarSupportedContent', 'aria-expanded' => 'false', 'aria-label' => 'Toggle navigation', 'data-target' => '#navbarSupportedContent', 'data-toggle' => 'collapse', :type => 'button'}
+          %span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarSupportedContent
+          %ul.navbar-nav
+            = form_for ItemSearchForm.new, url: items_path, method: :get, class: 'form-inline my-2 my-lg-0' do |f|
+              = f.text_field :keyword, placeholder: 'キーワード', class: 'form-control mr-sm-2'
+              = f.submit 'Search', class: 'btn btn-outline-secondary my-2 my-sm-0'
+          %ul.navbar-nav.ml-auto
+            %li.nav-item
+              = link_to items_path, class: 'nav-link' do
+                %i.fa.fa-fw.fa-lg.fa-search
+                商品を探す
+            - if member_signed_in?
+              = link_to member_favorites_path, class: 'nav-link' do
+                %i.fa.fa-fw.fa-heart
+                お気に入り
+            %li.nav-item
+              = link_to carts_path, class: 'nav-link' do
+                %i.fa.fa-shopping-cart.fa-fw.fa-lg
+                カート
+                - cart_quantity = Cart.current_quantity(current_member, session[:cart_session_id])
+                - if cart_quantity > 0
+                  %span.badge.badge-warning.py-1= cart_quantity
+            - if member_signed_in?
+              %li.nav-item.dropdown{style: 'height: 40px;'}
+                %a.nav-link.dropdown-toggle{href: '#', 'data-toggle' => 'dropdown', 'aria-haspopup' => 'true', 'aria-expanded' => 'false', id: 'account_dropdown'}
+                  %i.fa.fa-user.fa-lg.fa-fw
+                  = "#{current_member.account_name} さん"
+                .dropdown-menu{'aria-labelledby' => 'account_dropdown'}
+                  = link_to member_path, class: 'dropdown-item text-muted' do
+                    %i.fa.fa-id-card-o.mr-2
+                    マイページ
+                  = link_to destroy_member_session_path, method: :delete, class: 'dropdown-item text-muted' do
+                    %i.fa.fa-lock.mr-2
+                    ログアウト
+            - else
+              %li.nav-item= link_to 'ログイン', new_session_path(:member), class: 'nav-link'
+              %li.nav-item= link_to '会員登録', members_sign_up_select_path, class: 'nav-link'
+    .mb-2 &nbsp;
+    = content_for?(:content) ? yield(:content) : yield
+    .mb-5 &nbsp;
+    %footer.footer
+      .container.mt-4
+        .text-center
+          %ul.list-inline.small
+            %li.list-inline-item.mr-3= link_to '当サイトについて', static_page_path(name: :about)
+            %li.list-inline-item.mr-3= link_to 'プライバシーポリシー', static_page_path(name: :privacy)
+            %li.list-inline-item.mr-3= link_to '特定商取引法に基づく表記', static_page_path(name: :commercial)
+            %li.list-inline-item.mr-3= link_to '利用規約', static_page_path(name: :terms)
+            %li.list-inline-item= link_to 'お問い合わせ', new_contacts_path
+          .my-5
+            %h3 EC-TRIP DEMO SITE
+            .small Copyright &copy; 2017 EC-TRIP All Rights Reserved.
+
+    = javascript_include_tag 'front'
+    :javascript
+      $(document).ready(function() { $('body').bootstrapMaterialDesign(); });
+    = yield :javascript

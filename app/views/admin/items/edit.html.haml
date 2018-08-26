@@ -1,0 +1,12 @@
+- @crumbs = [{title: '商品一覧', path: admin_items_path}, {title: @item.name}]
+= form_for @item, url: admin_item_path(@item) do |f|
+  .card
+    .card-header
+      商品情報
+    .card-body
+      = render 'form', f: f
+      .float-right
+        = f.submit 'プレビュー', class: 'btn btn-success mr-2', name: 'item[preview]'
+        = f.submit '更新', class: 'btn btn-primary mr-2'
+        = link_to 'キャンセル', admin_items_path, class: 'btn btn-light'
+= render 'admin/images/new'

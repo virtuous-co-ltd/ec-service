@@ -1,0 +1,12 @@
+%p これはEC-TRIP デモサイトのテストメールです。
+%p
+  この度はご注文頂きまして、誠にありがとうございます。
+  %br/
+  下記ご注文内容にお間違えが無いかご確認ください。
+%hr/
+%p
+  = "ご注文番号: #{@purchase.purchase_no}"
+%ul
+  - @purchase.details.each do |detail|
+    %li= "#{detail.item.name} (数量:#{detail.quantity})"
+%hr/

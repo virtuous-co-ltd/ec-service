@@ -1,0 +1,33 @@
+- @crumbs = [{title: 'カテゴリー一覧'}]
+
+.card
+  .card-header.pt-3
+    カテゴリー一覧
+    = link_to new_admin_category_path, class: 'btn btn-success btn-sm float-right mb-0' do
+      %i.fa.fa-plus
+      新規作成
+  .card-body
+    %table.table.table-sm.table-hover.table-bordered
+      %thead
+        %tr.table-secondary
+          %th{width: '60%'} 名称
+          %th.text-center{width: '10%'} 商品数
+          %th.text-center{width: '10%'} 表示順
+          %th{width: '20%'}
+      %tbody
+        - @categories.each do |category|
+          %tr{class: "#{'table-light text-muted' unless category.root?}"}
+            %td
+              - if category.root?
+                = category.name
+              - else
+                %span.ml-3= category.name
+            %td.text-center
+              = category.items.size
+            %td.text-center
+              - unless category.sequence == 1
+                = link_to '上に移動', admin_category_path(category, sequence_up: true), method: :put
+            %td
+              = link_to '編集', edit_admin_category_path(category)
+              %span.my-2= '/'
+              = link_to '削除', admin_category_path(category), method: :delete, data: {confirm: "#{'所属する子カテゴリも同時に削除されます。' if category.root? && category.child_categories.present?}削除してよろしいでしょうか？"}

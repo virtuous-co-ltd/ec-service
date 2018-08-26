@@ -1,0 +1,105 @@
+- content_for :stylesheet do
+  = stylesheet_link_tag 'front/top'
+  = stylesheet_link_tag 'front/item'
+#top_slider.carousel.slide{'data-ride' => 'carousel', style: 'margin-top: -5rem;'}
+  .carousel-inner
+    - @sliders.each_with_index do |slider, i|
+      .carousel-item{class: "#{'active' if i == 0} #{'hover' if slider.link_url.present?}"}
+        = image_tag slider.image.public_url(:original), class: 'd-block img-fluid'
+        .carousel-caption{class: "text-#{slider.caption_position}"}
+          - if slider.title.present?
+            %h2{class: slider.caption_color}= slider.title
+          - if slider.description.present?
+            %p.view_pc{class: slider.caption_color}= slider.description
+          - if slider.link_url.present?
+            = link_to 'VIEW', slider.link_url, class: 'btn btn-info btn-raised view_pc'
+  - if @sliders.size > 1
+    %ol.carousel-indicators.view_pc
+      - (@sliders.size).times do |i|
+        %li{"data-slide-to" => i, "data-target" => "#top_slider", class: "#{'active' if i == 0}"}
+    .view_pc
+      %a.carousel-control-prev{"data-slide" => "prev", :href => "#top_slider", :role => "button"}
+        %span.carousel-control-prev-icon{"aria-hidden" => "true"}
+        %span.sr-only Previous
+      %a.carousel-control-next{"data-slide" => "next", :href => "#top_slider", :role => "button"}
+        %span.carousel-control-next-icon{"aria-hidden" => "true"}
+        %span.sr-only Next
+.category_area.view_pc
+  %hr.my-0
+  .container
+    %ul.nav.nav-pills.nav-justified
+      - all_categories = Category.sorted_all
+      - Category.root_categories.each do |root_category|
+        - if root_category.child_categories.blank?
+          %li.nav-item
+            = link_to root_category.name, items_path(item_search_form: {category_id: root_category.id}), class: 'nav-link'
+        - else
+          %li.nav-item.dropdown
+            %a.nav-link.dropdown-toggle{id: "root_category#{root_category.id}", href: '#', 'aria-expanded' => 'false', 'aria-haspopup' => 'true', 'data-toggle' => 'dropdown', role: 'button'}
+              = root_category.name
+            .dropdown-menu{'aria-labelledby' => "root_category#{root_category.id}"}
+              = link_to 'ALL', items_path(item_search_form: {category_id: root_category.id}), class: 'dropdown-item'
+              - all_categories.select{|child_category| child_category.root_category_id == root_category.id}.each do |child_category|
+                = link_to child_category.name, items_path(item_search_form: {category_id: child_category.id}), class: 'dropdown-item'
+%hr.mt-0.mb-5
+.container
+  .row.justify-content-center
+    .col-xl-10
+      %section.pickup
+        %h4.section_title
+          %i.fa.fa-star.fa-fw
+          PICK UP!
+          %span.no-thank-yu.text-muted スタッフおすすめ
+        .row
+          = render partial: 'items/card', collection: @items[:pickup], as: :item, locals: {favorites: @favorites}
+        .text-right
+          = link_to items_path(item_search_form: {pickup: 1}), class: 'btn btn-info btn-raised' do
+            MORE
+            %i.fa.fa-angle-right.fa-fw
+      %section.arrival_new
+        %h4.section_title
+          %i.fa.fa-bell.fa-fw
+          ARRIVAL NEW
+          %span.no-thank-yu.text-muted 新着商品
+        .row
+          = render partial: 'items/card', collection: @items[:new], as: :item, locals: {favorites: @favorites}
+        .text-right
+          = link_to items_path(item_search_form: {arrival_new: 1}), class: 'btn btn-info btn-raised' do
+            MORE
+            %i.fa.fa-angle-right.fa-fw
+      %section.topics
+        %h4.section_title
+          %i.fa.fa-info-circle.fa-fw
+          TOPICS
+        %hr/
+        - @topics.each do |topic|
+          %p
+            - if Date.current - 7.days < topic.created_at
+              %span.badge.badge-info.p-1.mr-1 NEW
+            %span.text-muted.mr-2= topic.created_at.strftime('%Y/%m/%d')
+            %br.view_sp
+            - if topic.link_url.present?
+              = link_to topic.title, topic.link_url, class: 'link', target: '_blank'
+            - else
+              = topic.title
+            %hr/
+- content_for :javascript do
+  :javascript
+    $(document).ready(function() {
+      $('.category_area').find('.dropdown-toggle').click(function() {
+        var target = $(this).next();
+        if (target.hasClass('show')) {
+          target.css('transform', '');
+          target.removeClass('dropdown-optional');
+        } else {
+          target.addClass('dropdown-optional');
+        }
+      });
+
+      $('#top_slider').find('.carousel-item').click(function() {
+        if($(this).find('a').length) {
+          console.log($(this).find('a').attr('href'));
+          window.location = $(this).find('a').attr('href');
+        }
+      });
+    });
