@@ -1,0 +1,53 @@
+#top_slider {
+  padding-top: 50px;
+  .carousel-item {
+    max-height: 480px;
+    img {margin: 0 auto;}
+    .carousel-caption {
+      @media (max-width: 767px) {
+        padding-bottom: 0;
+        left: 8%;
+        right: 8%;
+        h2 {font-size: 1.0rem;}
+        p {font-size: 0.85rem;}
+      }
+      .black {color: #3F4550;}
+      .white {color: #FAFAFA;}
+    }
+  }
+  .hover {
+    cursor: pointer;
+  }
+}
+
+.category_area {
+  background-color: #F8F9FA;
+  a {
+    color: #5A5A5A;
+  }
+  .dropdown-optional{
+    top: 61px !important;
+    transform: none !important;
+  }
+}
+section {
+  margin-bottom: 35px;
+  .section_title {
+    margin-bottom: 20px;
+    span {
+      font-size: 0.9rem;
+      margin-left: 5px;
+    }
+  }
+}
+.topics {
+  p {
+    padding: 0 10px;
+    font-size: 0.95rem;
+    line-height: 1.5rem;
+  }
+  a {
+    text-decoration: underline;
+    color: #3F4550;
+  }
+}
