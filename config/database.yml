@@ -1,0 +1,25 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: root
+  password: password
+  host: db
+
+development:
+  <<: *default
+  database: ec-trip_development
+
+test:
+  <<: *default
+  database: ec-trip_test
+
+production:
+  <<: *default
+  host: <%= ENV['PRO_DATABASE_HOST'] %>
+  charset: utf8mb4
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  database: ec-trip_production
+  username: <%= ENV['PRO_DATABASE_USERNAME'] %>
+  password: <%= ENV['PRO_DATABASE_PASSWORD'] %>

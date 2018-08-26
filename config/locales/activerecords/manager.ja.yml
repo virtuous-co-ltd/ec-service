@@ -1,0 +1,11 @@
+ja:
+  activerecord:
+    models:
+      manager: 管理者
+    attributes:
+      manager:
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード(確認)
+        last_name: 氏名(姓)
+        first_name: 氏名(名)
